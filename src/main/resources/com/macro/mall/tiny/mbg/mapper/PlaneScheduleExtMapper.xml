@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.tiny.mbg.mapper.PlaneScheduleExtMapper">
+  <resultMap id="BaseResultMap" type="com.macro.mall.tiny.mbg.model.PlaneSchedule">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="callsign" jdbcType="VARCHAR" property="callsign" />
+    <result column="routing" jdbcType="VARCHAR" property="routing" />
+    <result column="registration" jdbcType="VARCHAR" property="registration" />
+    <result column="deptime" jdbcType="TIME" property="deptime" />
+    <result column="arrtime" jdbcType="TIME" property="arrtime" />
+    <result column="origin" jdbcType="VARCHAR" property="origin" />
+    <result column="destination" jdbcType="VARCHAR" property="destination" />
+    <result column="airline" jdbcType="VARCHAR" property="airline" />
+    <result column="data_source" jdbcType="TINYINT" property="dataSource" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, callsign, routing, registration, deptime, arrtime, origin, destination, airline, 
+    data_source
+  </sql>
+  <select id="getPerHourArrivePlanes" parameterType="java.lang.String" resultType="com.macro.mall.tiny.vo.PerHourPlane">
+  SELECT
+  count(1) as planeCount,
+  s.airline as airline,
+  DATE_FORMAT(s.arrtime, '%H') AS perHour
+  FROM
+  plane_schedule s
+  WHERE
+  s.data_source = 0
+  AND s.routing = 'ROUTING_ARR'
+  GROUP BY
+    <!-- s.airline,-->
+    perHour;
+    </select>
+
+    <select id="getPerHourDepartPlanes" parameterType="java.lang.String" resultType="com.macro.mall.tiny.vo.PerHourPlane">
+    SELECT
+    count(1) as planeCount,
+    s.airline as airline,
+    DATE_FORMAT(s.deptime, '%H') AS perHour
+    FROM
+    plane_schedule s
+    WHERE
+    s.data_source = 0
+    AND s.routing = 'ROUTING_DEP'
+    GROUP BY
+      <!-- s.airline,-->
+       perHour;
+       </select>
+
+       <select id="getPerHourArrivePlanesCount" parameterType="java.lang.String" resultType="com.macro.mall.tiny.vo.PerHourPlaneCount">
+       SELECT
+       DATE_FORMAT(s.arrtime, '%H') AS perHour,
+      count(1) as planeCount,
+      'arr' as rounting
+       FROM
+       plane_schedule s
+       WHERE
+       s.data_source = 0
+       AND s.routing = 'ROUTING_ARR'
+       GROUP BY
+       perHour;
+       </select>
+
+       <select id="getPerHourDepartPlanesCount" parameterType="java.lang.String" resultType="com.macro.mall.tiny.vo.PerHourPlaneCount">
+       SELECT
+       DATE_FORMAT(s.deptime, '%H') AS perHour,
+      count(1) as planeCount,
+      'dep' as rounting
+       FROM
+       plane_schedule s
+       WHERE
+       s.data_source = 0
+       AND s.routing = 'ROUTING_DEP'
+       GROUP BY
+       perHour;
+       </select>
+
+       <select id="getAirPlaneConut" parameterType="java.lang.String" resultType="java.lang.Long">
+          SELECT count(DISTINCT( s.airline)) from plane_schedule s where s.data_source=0;
+       </select>
+
+       <select id="transcateExport" parameterType="java.lang.String" resultType="java.lang.Long">
+          TRUNCATE plane_schedule_export;
+       </select>
+
+         <!--按时间顺序查询所有航班-->
+    <select id="getAllPlanesOrderly" parameterType="java.lang.String" resultType="com.macro.mall.tiny.vo.OrderlyPlane">
+     select DATE_FORMAT(IFNULL(s.arrtime,s.deptime), '%H') AS perHour,s.* from plane_schedule s order BY perHour,s.airline,s.routing;
+  </select>
+
+    <select id="getPlaneScheduleImage" resultType="com.macro.mall.tiny.mbg.model.PlaneSchedule">
+        SELECT * from plane_schedule s where s.airline=#{airline,jdbcType=VARCHAR} and s.registration=#{registration,jdbcType=VARCHAR} and s.deptime>#{arrtime,jdbcType=TIME} order by s.deptime limit 1;
+    </select>
+
+    <select id="getIncrementedCount" resultType="com.macro.mall.tiny.vo.IncrementVo">
+        select perHour,
+        sum(if(temp.routing='ROUTING_ARR',temp.airNum,0)) as arriveIncremented,
+        sum(if(temp.routing='ROUTING_DEP',temp.airNum,0)) as departIncremented from
+        (
+         SELECT count(*) as airNum,DATE_FORMAT(IFNULL(s.arrtime,s.deptime), '%H') as perHour,s.routing FROM
+         `plane_schedule` s where s.registration LIKE '%#%' group by perHour,s.routing
+        ) temp group by temp.perHour;
+    </select>
+
+    <select id="getAllPlanesByTime" resultType="com.macro.mall.tiny.mbg.model.PlaneSchedule">
+        SELECT
+			IFNULL(s.arrtime, s.deptime) AS perHour,
+			s.*
+		FROM
+			`plane_schedule` s order by perHour;
+    </select>
+</mapper>
