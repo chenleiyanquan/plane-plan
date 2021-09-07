@@ -5,14 +5,19 @@ import com.macro.mall.tiny.mbg.model.PlaneScheduleExport;
 import com.macro.mall.tiny.mbg.repository.PlaneExportRepository;
 import com.macro.mall.tiny.mbg.repository.PlaneRepository;
 import com.macro.mall.tiny.service.PlaneService;
-import com.macro.mall.tiny.vo.IncrementVo;
-import com.macro.mall.tiny.vo.PerHourPlane;
-import com.macro.mall.tiny.vo.PerHourPlaneCount;
-import com.macro.mall.tiny.vo.PlaneScheduleExcel;
+import com.macro.mall.tiny.vo.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,5 +117,36 @@ public class PlaneServiceImpl implements PlaneService {
             result.add(excel);
         });
         return result;
+    }
+
+    public void importInfo(MultipartFile file) throws Exception {
+        if (file == null || StringUtils.isEmpty(file.getOriginalFilename())) {
+            throw new Exception("参数不能为空");
+        }
+        Workbook workbook = null;
+        try {
+            InputStream inputStream = file.getInputStream();
+            if (file.getOriginalFilename().endsWith("xlsx") || file.getOriginalFilename().endsWith("XLSX")) {
+                workbook = new XSSFWorkbook(inputStream);
+            } else {
+                throw new Exception("文件类型不正确,必须为excel xlsx文件");
+            }
+        } catch (IOException e) {
+            throw new Exception("文件解析失败");
+        }
+        Sheet sheetAt = workbook.getSheetAt(0);
+        int count = sheetAt.getLastRowNum();
+        if (count < 2) {
+            throw new Exception("导入失败，excel文件数据为空！");
+        }
+        List<PlaneScheduleImport> feedbackImportList = new ArrayList<>();
+        for (int i = 2; i <= count; i++) {
+            Row row = sheetAt.getRow(i);
+            if (row == null) {
+                throw new Exception("第 " + (i + 1) + " 行数据不能为空");
+            }
+            FeedbackImport info = getFeedbackImport(row, channelPackages, channel, employeeDTO);
+            feedbackImportList.add(info);
+        }
     }
 }

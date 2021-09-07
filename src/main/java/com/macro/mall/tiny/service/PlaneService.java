@@ -7,6 +7,7 @@ import com.macro.mall.tiny.vo.IncrementVo;
 import com.macro.mall.tiny.vo.PerHourPlane;
 import com.macro.mall.tiny.vo.PerHourPlaneCount;
 import com.macro.mall.tiny.vo.PlaneScheduleExcel;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.util.List;
@@ -54,4 +55,6 @@ public interface PlaneService {
     List<PlaneSchedule> getPlanesByDepHour(int perHour) throws ParseException;
 
     List<PlaneScheduleExcel> getPlanesExcelVos();
+
+    void importInfo(MultipartFile file) throws Exception;
 }

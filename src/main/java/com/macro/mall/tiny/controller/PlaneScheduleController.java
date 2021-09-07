@@ -4,11 +4,13 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSONObject;
+import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.mbg.model.PlaneSchedule;
 import com.macro.mall.tiny.service.PlaneService;
 import com.macro.mall.tiny.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -355,5 +358,10 @@ public class PlaneScheduleController {
 
     }
 
-
+    @PostMapping("/import")
+    @ApiOperation("导入反馈开通情况")
+    public CommonResult importInfo(@RequestParam(value = "file", required = true) @ApiParam("反馈开通情况数据") MultipartFile file, @RequestParam(value = "channelId", required = true) String channelId) throws Exception {
+        planeService.importInfo(file);
+        return CommonResult.success("导入成功");
+    }
 }
