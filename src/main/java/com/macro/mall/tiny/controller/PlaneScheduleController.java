@@ -1,11 +1,15 @@
 package com.macro.mall.tiny.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.mbg.model.PlaneSchedule;
+import com.macro.mall.tiny.service.PlaneScheduleListener;
 import com.macro.mall.tiny.service.PlaneService;
 import com.macro.mall.tiny.vo.*;
 import io.swagger.annotations.Api;
@@ -360,8 +364,15 @@ public class PlaneScheduleController {
 
     @PostMapping("/import")
     @ApiOperation("导入反馈开通情况")
-    public CommonResult importInfo(@RequestParam(value = "file", required = true) @ApiParam("反馈开通情况数据") MultipartFile file, @RequestParam(value = "channelId", required = true) String channelId) throws Exception {
-        planeService.importInfo(file);
-        return CommonResult.success("导入成功");
+    public CommonResult importInfo(@RequestParam(value = "file", required = true) MultipartFile file) throws Exception {
+        try{
+            ExcelReader excelReader = EasyExcel.read(file.getInputStream(), PlaneScheduleExcelModel.class, new PlaneScheduleListener(planeService)).build();
+            ReadSheet readSheet = EasyExcel.readSheet(0).build();
+            excelReader.read(readSheet);
+            excelReader.finish();
+            return CommonResult.success("导入成功！");
+        }catch(Exception e){
+            return  CommonResult.failed(e.getMessage());
+        }
     }
 }

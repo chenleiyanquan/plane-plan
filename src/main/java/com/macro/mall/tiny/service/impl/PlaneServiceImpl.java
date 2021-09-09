@@ -30,6 +30,11 @@ import java.util.List;
  */
 @Service("planeService")
 public class PlaneServiceImpl implements PlaneService {
+    @Override
+    public void importInfo(MultipartFile file) throws Exception {
+
+    }
+
     @Autowired
     private PlaneRepository planeRepository;
 
@@ -119,34 +124,8 @@ public class PlaneServiceImpl implements PlaneService {
         return result;
     }
 
-    public void importInfo(MultipartFile file) throws Exception {
-        if (file == null || StringUtils.isEmpty(file.getOriginalFilename())) {
-            throw new Exception("参数不能为空");
-        }
-        Workbook workbook = null;
-        try {
-            InputStream inputStream = file.getInputStream();
-            if (file.getOriginalFilename().endsWith("xlsx") || file.getOriginalFilename().endsWith("XLSX")) {
-                workbook = new XSSFWorkbook(inputStream);
-            } else {
-                throw new Exception("文件类型不正确,必须为excel xlsx文件");
-            }
-        } catch (IOException e) {
-            throw new Exception("文件解析失败");
-        }
-        Sheet sheetAt = workbook.getSheetAt(0);
-        int count = sheetAt.getLastRowNum();
-        if (count < 2) {
-            throw new Exception("导入失败，excel文件数据为空！");
-        }
-        List<PlaneScheduleImport> feedbackImportList = new ArrayList<>();
-        for (int i = 2; i <= count; i++) {
-            Row row = sheetAt.getRow(i);
-            if (row == null) {
-                throw new Exception("第 " + (i + 1) + " 行数据不能为空");
-            }
-            FeedbackImport info = getFeedbackImport(row, channelPackages, channel, employeeDTO);
-            feedbackImportList.add(info);
-        }
+    @Override
+    public void batchInsert(List<PlaneSchedule> planeScheduleList) {
+        planeRepository.batchInsert(planeScheduleList);
     }
 }

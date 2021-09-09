@@ -116,4 +116,11 @@ public class PlaneRepository {
     public List<PlaneSchedule> getAllPlanesByTime() {
        return planeScheduleExtMapper.getAllPlanesByTime();
     }
+
+    public void batchInsert(List<PlaneSchedule> planeScheduleList) {
+        planeScheduleList.forEach(e->{
+            planeScheduleMapper.insert(e);
+        });
+
+    }
 }

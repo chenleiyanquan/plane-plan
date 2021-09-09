@@ -57,4 +57,6 @@ public interface PlaneService {
     List<PlaneScheduleExcel> getPlanesExcelVos();
 
     void importInfo(MultipartFile file) throws Exception;
+
+    void batchInsert(List<PlaneSchedule> planeScheduleList);
 }
