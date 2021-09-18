@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -363,11 +364,16 @@ public class PlaneScheduleController {
     }
 
     @PostMapping("/import")
+    @ResponseBody
     @ApiOperation("导入反馈开通情况")
-    public CommonResult importInfo(@RequestParam(value = "file", required = true) MultipartFile file) throws Exception {
+    public CommonResult importInfo(@RequestParam MultipartFile file) throws Exception {
+        if (file == null || StringUtils.isEmpty(file.getOriginalFilename())) {
+            throw new Exception("参数不能为空");
+        }
         try{
             ExcelReader excelReader = EasyExcel.read(file.getInputStream(), PlaneScheduleExcelModel.class, new PlaneScheduleListener(planeService)).build();
             ReadSheet readSheet = EasyExcel.readSheet(0).build();
+            ReadSheet readSheet1 = EasyExcel.readSheet(1).build();
             excelReader.read(readSheet);
             excelReader.finish();
             return CommonResult.success("导入成功！");
