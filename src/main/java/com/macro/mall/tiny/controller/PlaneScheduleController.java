@@ -102,11 +102,6 @@ public class PlaneScheduleController {
             List<PlaneScheduleExcelModel> datas = listener.getList();
             List<PlaneSchedule> planeScheduleList = convert(datas);
             planeService.batchInsert(planeScheduleList);
-            //校验registration的总数是否为偶数，若不是，则给出提示
-            String checkMsg = planeService.checkDoubleRegistration();
-            if(!StringUtils.isEmpty(checkMsg)){
-                throw new Exception("导入数据中以下发动机编号数为奇数，请处理后重新导入："+checkMsg);
-            }
             return CommonResult.success("导入成功！");
         }catch(Exception e){
             return  CommonResult.failed(e.getMessage());

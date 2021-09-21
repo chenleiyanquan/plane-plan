@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration  scan="true" scanPeriod="60 seconds" debug="false">
+    <contextName>logback</contextName>
+
+    <property name="maxSaveDays" value="30"/><!-- 日志最大保存天数 -->
+    <property name="log.path" value="/Users/chenlei/Downloads/planePlanLogs/" />
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %magenta(${PID:-}) [%X{PtxId}] %white(---) %-20(%yellow([%20.20thread])) %-55(%cyan(%logger{50} - [%class:%method:%line])) %highlight(- %msg%n)"/>
+    <!--输出到控制台-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--输出到文件-->
+    <appender name="infoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${maxSaveDays}</maxHistory><!--日志最大保存天数-->
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <!--&lt;!&ndash;记录INFO及其以上日志级别&ndash;&gt;-->
+        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+            <!--<level>INFO</level>-->
+        <!--</filter>-->
+    </appender>
+
+
+    <!--滚动文件-->
+    <appender name="errorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory><!--保存最近30天的日志-->
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <!--只记录ERROR级别日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+
+    <!-- 用于打印 Spring 在启动的时候初始化各个 Bean 的信息-->
+    <logger name="org.springframework" level="WARN" />
+
+    <!-- mybatis日志打印-->
+    <logger name="org.apache.ibatis" level="DEBUG" />
+    <logger name="java.sql" level="DEBUG" />
+
+    <!--  项目 mapper 路径 console控制台显示sql语句：STDOUT.filter.level -> debug级别-->
+    <logger name="com.mklij.channel.service.dao" level="DEBUG"></logger>
+
+
+    <root level="INFO">
+        <appender-ref ref="console" />
+        <appender-ref ref="infoFile" />
+        <appender-ref ref="errorFile" />
+    </root>
+
+
+</configuration>

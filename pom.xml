@@ -100,11 +100,177 @@
 
     </dependencies>
 
+    <profiles>
+        <!--JVM的配置注意Java内存问题,考虑是后台计算还是实时服务-->
+        <!-- dev -->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <env>dev</env>
+                <jvmSettings.initialMemorySize>256</jvmSettings.initialMemorySize>
+                <jvmSettings.maxMemorySize>256</jvmSettings.maxMemorySize>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <!-- uat1 -->
+        <profile>
+            <id>uat1</id>
+            <properties>
+                <env>uat1</env>
+                <jvmSettings.initialMemorySize>512</jvmSettings.initialMemorySize>
+                <jvmSettings.maxMemorySize>512</jvmSettings.maxMemorySize>
+            </properties>
+        </profile>
+        <!-- stag -->
+        <profile>
+            <id>stg</id>
+            <properties>
+                <env>stg</env>
+                <jvmSettings.initialMemorySize>512</jvmSettings.initialMemorySize>
+                <jvmSettings.maxMemorySize>512</jvmSettings.maxMemorySize>
+            </properties>
+        </profile>
+        <!-- prd -->
+        <profile>
+            <id>prd</id>
+            <properties>
+                <env>pro</env>
+                <jvmSettings.initialMemorySize>512</jvmSettings.initialMemorySize>
+                <jvmSettings.maxMemorySize>512</jvmSettings.maxMemorySize>
+            </properties>
+        </profile>
+        <!-- fat -->
+        <profile>
+            <id>fat</id>
+            <properties>
+                <env>fat</env>
+                <jvmSettings.initialMemorySize>512</jvmSettings.initialMemorySize>
+                <jvmSettings.maxMemorySize>512</jvmSettings.maxMemorySize>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <repositoryName>lib</repositoryName>
+                    <configurationDirectory>conf</configurationDirectory>
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                    <!--原配置，作用：将需要用到的配置文件在打包时复制到jsw生成的conf目录-->
+                    <!--                    <configurationSourceDirectory>src/main/resources/env/${env}</configurationSourceDirectory>-->
+                    <configurationSourceDirectory>src/main/resources/env/</configurationSourceDirectory>
+                    <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+                    <target>${project.build.directory}</target>
+                    <daemons>
+                        <daemon>
+                            <id>${project.name}</id>
+                            <!--启动加载类-->
+                            <mainClass>com.macro.mall.tiny.PlanePlanApplication</mainClass>
+                            <platforms>
+                                <platform>jsw</platform>
+                            </platforms>
+                            <wrapperLogFile>logs/${project.name}.log</wrapperLogFile>
+                            <generatorConfigurations>
+                                <generatorConfiguration>
+                                    <generator>jsw</generator>
+                                    <includes>
+                                        <include>macosx-universal-64</include>
+                                        <include>linux-x86-32</include>
+                                        <include>linux-x86-64</include>
+                                        <include>windows-x86-32</include>
+                                        <include>windows-x86-64</include>
+                                    </includes>
+                                    <configuration>
+                                        <property>
+                                            <name>configuration.directory.in.classpath.first</name>
+                                            <value>conf</value>
+                                        </property>
+                                        <property>
+                                            <name>set.default.REPO_DIR</name>
+                                            <value>lib</value>
+                                        </property>
+                                        <property>
+                                            <name>wrapper.ping.timeout</name>
+                                            <value>300</value>
+                                        </property>
+                                        <property>
+                                            <name>wrapper.startup.timeout</name>
+                                            <value>300</value>
+                                        </property>
+                                    </configuration>
+                                </generatorConfiguration>
+                            </generatorConfigurations>
+                            <jvmSettings>
+                                <!--使用extraAreumeng 解决 appassembler-maven-plugin对内存的最大限制4096-->
+                                <extraArguments>
+                                    <!--用户自动配置中心环境-->
+                                    <extraArgument>-Denv=${env}</extraArgument>
+                                    <extraArgument>-server</extraArgument>
+                                    <extraArgument>-Xms${jvmSettings.initialMemorySize}m</extraArgument>
+                                    <extraArgument>-Xmx${jvmSettings.maxMemorySize}m</extraArgument>
+                                    <extraArgument>-Djava.net.preferIPv4Stack=true</extraArgument>
+                                    <extraArgument>-XX:+UseG1GC</extraArgument>
+                                    <extraArgument>-XX:MaxGCPauseMillis=400</extraArgument>
+                                    <extraArgument>-XX:InitiatingHeapOccupancyPercent=60</extraArgument>
+                                    <extraArgument>-XX:+PrintGC</extraArgument>
+                                    <extraArgument>-XX:+PrintGCDetails</extraArgument>
+                                    <extraArgument>-XX:+PrintGCTimeStamps</extraArgument>
+                                    <extraArgument>-XX:+PrintGCApplicationConcurrentTime</extraArgument>
+                                    <extraArgument>-XX:+PrintGCApplicationStoppedTime</extraArgument>
+                                    <extraArgument>-Xloggc:./logs/gc.log</extraArgument>
+                                    <!--指定启动模式-->
+                                    <extraArgument>-Dnewrelic.environment=${env}</extraArgument>
+                                </extraArguments>
+                            </jvmSettings>
+                        </daemon>
+                    </daemons>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-jsw-scripts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate-daemons</goal>
+                            <goal>create-repository</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptor>assembly/bin.xml</descriptor>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

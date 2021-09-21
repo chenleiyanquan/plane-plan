@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.macro.mall.tiny.mbg.mapper.PlaneScheduleMapper">
   <resultMap id="BaseResultMap" type="com.macro.mall.tiny.mbg.model.PlaneSchedule">
+    <!--@mbg.generated-->
+    <!--@Table plane_schedule-->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="callsign" jdbcType="VARCHAR" property="callsign" />
     <result column="routing" jdbcType="VARCHAR" property="routing" />
@@ -12,8 +14,11 @@
     <result column="destination" jdbcType="VARCHAR" property="destination" />
     <result column="airline" jdbcType="VARCHAR" property="airline" />
     <result column="data_source" jdbcType="TINYINT" property="dataSource" />
+    <result column="airType" jdbcType="VARCHAR" property="airtype" />
+    <result column="airTime" jdbcType="TIME" property="airtime" />
   </resultMap>
   <sql id="Example_Where_Clause">
+    <!--@mbg.generated-->
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
         <if test="criteria.valid">
@@ -43,6 +48,7 @@
     </where>
   </sql>
   <sql id="Update_By_Example_Where_Clause">
+    <!--@mbg.generated-->
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
         <if test="criteria.valid">
@@ -72,10 +78,12 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
+    <!--@mbg.generated-->
     id, callsign, routing, registration, deptime, arrtime, origin, destination, airline, 
-    data_source
+    data_source, airType, airTime
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.tiny.mbg.model.PlaneScheduleExample" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
     select
     <if test="distinct">
       distinct
@@ -90,37 +98,39 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
     select 
     <include refid="Base_Column_List" />
     from plane_schedule
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--@mbg.generated-->
     delete from plane_schedule
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.macro.mall.tiny.mbg.model.PlaneScheduleExample">
+    <!--@mbg.generated-->
     delete from plane_schedule
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.macro.mall.tiny.mbg.model.PlaneSchedule">
-    insert into plane_schedule (id, callsign, routing, 
-      registration, deptime, arrtime, 
-      origin, destination, airline, 
-      data_source)
-    values (#{id,jdbcType=INTEGER}, #{callsign,jdbcType=VARCHAR}, #{routing,jdbcType=VARCHAR}, 
-      #{registration,jdbcType=VARCHAR}, #{deptime,jdbcType=TIME}, #{arrtime,jdbcType=TIME}, 
-      #{origin,jdbcType=VARCHAR}, #{destination,jdbcType=VARCHAR}, #{airline,jdbcType=VARCHAR}, 
-      #{dataSource,jdbcType=TINYINT})
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.macro.mall.tiny.mbg.model.PlaneSchedule" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into plane_schedule (callsign, routing, registration, 
+      deptime, arrtime, origin, 
+      destination, airline, data_source, 
+      airType, airTime)
+    values (#{callsign,jdbcType=VARCHAR}, #{routing,jdbcType=VARCHAR}, #{registration,jdbcType=VARCHAR}, 
+      #{deptime,jdbcType=TIME}, #{arrtime,jdbcType=TIME}, #{origin,jdbcType=VARCHAR}, 
+      #{destination,jdbcType=VARCHAR}, #{airline,jdbcType=VARCHAR}, #{dataSource,jdbcType=TINYINT}, 
+      #{airtype,jdbcType=VARCHAR}, #{airtime,jdbcType=TIME})
   </insert>
-  <insert id="insertSelective" parameterType="com.macro.mall.tiny.mbg.model.PlaneSchedule">
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.macro.mall.tiny.mbg.model.PlaneSchedule" useGeneratedKeys="true">
+    <!--@mbg.generated-->
     insert into plane_schedule
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="callsign != null">
         callsign,
       </if>
@@ -148,11 +158,14 @@
       <if test="dataSource != null">
         data_source,
       </if>
+      <if test="airtype != null">
+        airType,
+      </if>
+      <if test="airtime != null">
+        airTime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="callsign != null">
         #{callsign,jdbcType=VARCHAR},
       </if>
@@ -180,15 +193,23 @@
       <if test="dataSource != null">
         #{dataSource,jdbcType=TINYINT},
       </if>
+      <if test="airtype != null">
+        #{airtype,jdbcType=VARCHAR},
+      </if>
+      <if test="airtime != null">
+        #{airtime,jdbcType=TIME},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.macro.mall.tiny.mbg.model.PlaneScheduleExample" resultType="java.lang.Long">
+    <!--@mbg.generated-->
     select count(*) from plane_schedule
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
+    <!--@mbg.generated-->
     update plane_schedule
     <set>
       <if test="record.id != null">
@@ -221,12 +242,19 @@
       <if test="record.dataSource != null">
         data_source = #{record.dataSource,jdbcType=TINYINT},
       </if>
+      <if test="record.airtype != null">
+        airType = #{record.airtype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.airtime != null">
+        airTime = #{record.airtime,jdbcType=TIME},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
+    <!--@mbg.generated-->
     update plane_schedule
     set id = #{record.id,jdbcType=INTEGER},
       callsign = #{record.callsign,jdbcType=VARCHAR},
@@ -237,12 +265,15 @@
       origin = #{record.origin,jdbcType=VARCHAR},
       destination = #{record.destination,jdbcType=VARCHAR},
       airline = #{record.airline,jdbcType=VARCHAR},
-      data_source = #{record.dataSource,jdbcType=TINYINT}
+      data_source = #{record.dataSource,jdbcType=TINYINT},
+      airType = #{record.airtype,jdbcType=VARCHAR},
+      airTime = #{record.airtime,jdbcType=TIME}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.macro.mall.tiny.mbg.model.PlaneSchedule">
+    <!--@mbg.generated-->
     update plane_schedule
     <set>
       <if test="callsign != null">
@@ -272,10 +303,17 @@
       <if test="dataSource != null">
         data_source = #{dataSource,jdbcType=TINYINT},
       </if>
+      <if test="airtype != null">
+        airType = #{airtype,jdbcType=VARCHAR},
+      </if>
+      <if test="airtime != null">
+        airTime = #{airtime,jdbcType=TIME},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.macro.mall.tiny.mbg.model.PlaneSchedule">
+    <!--@mbg.generated-->
     update plane_schedule
     set callsign = #{callsign,jdbcType=VARCHAR},
       routing = #{routing,jdbcType=VARCHAR},
@@ -285,7 +323,9 @@
       origin = #{origin,jdbcType=VARCHAR},
       destination = #{destination,jdbcType=VARCHAR},
       airline = #{airline,jdbcType=VARCHAR},
-      data_source = #{dataSource,jdbcType=TINYINT}
+      data_source = #{dataSource,jdbcType=TINYINT},
+      airType = #{airtype,jdbcType=VARCHAR},
+      airTime = #{airtime,jdbcType=TIME}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
