@@ -24,10 +24,13 @@ public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleEx
      */
     private static final int BATCH_COUNT = 6000;
     List<PlaneScheduleExcelModel> list = new ArrayList<>();
-    private PlaneService planeService;
 
-    public PlaneScheduleListener(PlaneService planeService) {
-        this.planeService = planeService;
+    public List<PlaneScheduleExcelModel> getList() {
+        return list;
+    }
+
+    public void setList(List<PlaneScheduleExcelModel> list) {
+        this.list = list;
     }
 
     @Override
@@ -47,15 +50,9 @@ public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleEx
         logger.info("解析到一条数据:{}", JSON.toJSONString(model));
         list.add(model);
         if (list.size() >= BATCH_COUNT) {
-            clearAndsaveData();
             // 存储完成清理 list
-            list.clear();
+           // list.clear();
         }
-    }
-
-    private void clearAndsaveData() {
-        List<PlaneSchedule> planeScheduleList = list.stream().map(e->convert(e)).collect(Collectors.toList());
-        planeService.batchInsert(planeScheduleList);
     }
 
     private PlaneSchedule convert(PlaneScheduleExcelModel e) {
@@ -67,7 +64,7 @@ public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleEx
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-
+        System.out.println("解析结束");
     }
 
     @Override

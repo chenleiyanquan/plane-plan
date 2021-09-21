@@ -75,7 +75,8 @@ public class PlaneRepository {
             //到达
             criteria.andArrtimeIsNotNull();
         }
-
+        example.setOrderByClause("airTime asc");
+        planeScheduleMapper.selectByExample(example);
         return planeScheduleMapper.selectByExample(example);
     }
 
@@ -122,5 +123,13 @@ public class PlaneRepository {
             planeScheduleMapper.insert(e);
         });
 
+    }
+
+    public void clearAllData() {
+        planeScheduleExtMapper.clearAllData();
+    }
+
+    public String checkDoubleRegistration() {
+       return planeScheduleExtMapper.checkDoubleRegistration();
     }
 }

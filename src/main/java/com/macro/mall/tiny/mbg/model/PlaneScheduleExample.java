@@ -6,79 +6,46 @@ import java.util.Iterator;
 import java.util.List;
 
 public class PlaneScheduleExample {
-    /**  排序字段 */
     protected String orderByClause;
 
-    /**  过滤重复数据 */
     protected boolean distinct;
 
-    /**  当前的查询条件实例 */
     protected List<Criteria> oredCriteria;
 
-    /**
-     *  构造查询条件
-     */
     public PlaneScheduleExample() {
-        oredCriteria = new ArrayList<Criteria>();
+        oredCriteria = new ArrayList<>();
     }
 
-    /**
-     *  设置排序字段
-     * @param orderByClause 排序字段
-     */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    /**
-     *  获取排序字段
-     */
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    /**
-     *  设置过滤重复数据
-     * @param distinct 是否过滤重复数据
-     */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
-    /**
-     *  是否过滤重复数据
-     */
     public boolean isDistinct() {
         return distinct;
     }
 
-    /**
-     *  获取当前的查询条件实例
-     */
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
     }
 
-    /**
-     *  增加或者的查询条件,用于构建或者查询
-     * @param criteria 过滤条件实例
-     */
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
     }
 
-    /**
-     *  创建一个新的或者查询条件
-     */
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
         oredCriteria.add(criteria);
         return criteria;
     }
 
-    /**
-     *  创建一个查询条件
-     */
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (oredCriteria.size() == 0) {
@@ -87,35 +54,23 @@ public class PlaneScheduleExample {
         return criteria;
     }
 
-    /**
-     *  内部构建查询条件对象
-     */
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
         return criteria;
     }
 
-    /**
-     *  清除查询条件
-     */
     public void clear() {
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
     }
 
-    /**
-     * 
-     * 数据库表：plane_schedule
-     * @date 
-     * @author Mybatis Generator
-     */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
         protected GeneratedCriteria() {
             super();
-            criteria = new ArrayList<Criterion>();
+            criteria = new ArrayList<>();
         }
 
         public boolean isValid() {
@@ -162,7 +117,7 @@ public class PlaneScheduleExample {
             if (values == null || values.size() == 0) {
                 throw new RuntimeException("Value list for " + property + " cannot be null or empty");
             }
-            List<java.sql.Time> timeList = new ArrayList<java.sql.Time>();
+            List<java.sql.Time> timeList = new ArrayList<>();
             Iterator<Date> iter = values.iterator();
             while (iter.hasNext()) {
                 timeList.add(new java.sql.Time(iter.next().getTime()));
@@ -836,11 +791,138 @@ public class PlaneScheduleExample {
             addCriterion("data_source not between", value1, value2, "dataSource");
             return (Criteria) this;
         }
+
+        public Criteria andAirtypeIsNull() {
+            addCriterion("airType is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeIsNotNull() {
+            addCriterion("airType is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeEqualTo(String value) {
+            addCriterion("airType =", value, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeNotEqualTo(String value) {
+            addCriterion("airType <>", value, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeGreaterThan(String value) {
+            addCriterion("airType >", value, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeGreaterThanOrEqualTo(String value) {
+            addCriterion("airType >=", value, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeLessThan(String value) {
+            addCriterion("airType <", value, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeLessThanOrEqualTo(String value) {
+            addCriterion("airType <=", value, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeLike(String value) {
+            addCriterion("airType like", value, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeNotLike(String value) {
+            addCriterion("airType not like", value, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeIn(List<String> values) {
+            addCriterion("airType in", values, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeNotIn(List<String> values) {
+            addCriterion("airType not in", values, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeBetween(String value1, String value2) {
+            addCriterion("airType between", value1, value2, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtypeNotBetween(String value1, String value2) {
+            addCriterion("airType not between", value1, value2, "airtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeIsNull() {
+            addCriterion("airTime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeIsNotNull() {
+            addCriterion("airTime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeEqualTo(Date value) {
+            addCriterionForJDBCTime("airTime =", value, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeNotEqualTo(Date value) {
+            addCriterionForJDBCTime("airTime <>", value, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeGreaterThan(Date value) {
+            addCriterionForJDBCTime("airTime >", value, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCTime("airTime >=", value, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeLessThan(Date value) {
+            addCriterionForJDBCTime("airTime <", value, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCTime("airTime <=", value, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeIn(List<Date> values) {
+            addCriterionForJDBCTime("airTime in", values, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeNotIn(List<Date> values) {
+            addCriterionForJDBCTime("airTime not in", values, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeBetween(Date value1, Date value2) {
+            addCriterionForJDBCTime("airTime between", value1, value2, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirtimeNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCTime("airTime not between", value1, value2, "airtime");
+            return (Criteria) this;
+        }
     }
 
-    /**
-     * plane_schedule
-     */
     public static class Criteria extends GeneratedCriteria {
 
         protected Criteria() {
@@ -848,12 +930,6 @@ public class PlaneScheduleExample {
         }
     }
 
-    /**
-     * 
-     * 数据库表：plane_schedule
-     * @date 
-     * @author Mybatis Generator
-     */
     public static class Criterion {
         private String condition;
 

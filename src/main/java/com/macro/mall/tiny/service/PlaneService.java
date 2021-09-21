@@ -59,4 +59,8 @@ public interface PlaneService {
     void importInfo(MultipartFile file) throws Exception;
 
     void batchInsert(List<PlaneSchedule> planeScheduleList);
+
+    void clearAllData();
+
+    String checkDoubleRegistration();
 }

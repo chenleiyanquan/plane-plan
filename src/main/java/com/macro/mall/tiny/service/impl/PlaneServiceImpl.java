@@ -128,4 +128,13 @@ public class PlaneServiceImpl implements PlaneService {
     public void batchInsert(List<PlaneSchedule> planeScheduleList) {
         planeRepository.batchInsert(planeScheduleList);
     }
+    @Override
+    public void clearAllData() {
+        planeRepository.clearAllData();
+    }
+
+    @Override
+    public String checkDoubleRegistration() {
+        return planeRepository.checkDoubleRegistration();
+    }
 }

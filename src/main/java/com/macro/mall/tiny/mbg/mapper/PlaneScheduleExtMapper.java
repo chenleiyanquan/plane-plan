@@ -34,4 +34,8 @@ public interface PlaneScheduleExtMapper {
     List<IncrementVo> getIncrementedCount();
 
     List<PlaneSchedule> getAllPlanesByTime();
+
+    void clearAllData();
+
+    String checkDoubleRegistration();
 }

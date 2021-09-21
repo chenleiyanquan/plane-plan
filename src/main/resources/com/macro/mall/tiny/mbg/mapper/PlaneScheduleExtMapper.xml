@@ -162,9 +162,15 @@
 
     <select id="getAllPlanesByTime" resultType="com.macro.mall.tiny.mbg.model.PlaneSchedule">
         SELECT
-			IFNULL(s.arrtime, s.deptime) AS perHour,
 			s.*
 		FROM
-			`plane_schedule` s order by perHour;
+			`plane_schedule` s order by airTime;
+    </select>
+    <select id="clearAllData">
+        TRUNCATE plane_schedule
+    </select>
+    <select id="checkDoubleRegistration" resultType="java.lang.String">
+        select GROUP_CONCAT(msg SEPARATOR ';') from (
+    select CONCAT(' 发动机编号：',p.registration,' , 数量：',COUNT(1)) as msg from plane_schedule p GROUP BY p.registration having count(1)%2!=0) temp
     </select>
 </mapper>

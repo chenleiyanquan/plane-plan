@@ -48,7 +48,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
-            <version>2.2.8</version>
+            <version>2.2.4</version>
         </dependency>
 
         <!--MyBatis分页插件-->
@@ -108,5 +108,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- 两个ID必须与 setting.xml中的<server><id>nexus-releases</id></server>保持一致-->
+    <distributionManagement>
+        <repository>
+            <id>aijia-releases</id>
+            <name>Release Repository</name>
+            <url>${ReleaseRepository}</url>
+        </repository>
+        <snapshotRepository>
+            <id>aijia-snapshots</id>
+            <name>Snapshot Repository</name>
+            <url>${SnapshotRepository}</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
