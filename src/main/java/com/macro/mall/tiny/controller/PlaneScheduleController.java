@@ -11,6 +11,7 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.mbg.model.PlaneSchedule;
+import com.macro.mall.tiny.mbg.repository.PlaneRepository;
 import com.macro.mall.tiny.service.PlaneScheduleListener;
 import com.macro.mall.tiny.service.PlaneService;
 import com.macro.mall.tiny.vo.*;
@@ -19,6 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.models.auth.In;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,13 +56,15 @@ import static java.util.stream.Collectors.groupingBy;
 @Api(tags = "航班计划")
 @RequestMapping("/air")
 @RestController
-@Log
+@Slf4j
 public class PlaneScheduleController {
-    final static Logger logger = LoggerFactory.getLogger(PlaneScheduleController.class);
+   // final static Logger logger = LoggerFactory.getLogger(PlaneScheduleController.class);
 
     @Autowired
     private PlaneService planeService;
 
+    @Autowired
+    private PlaneRepository planeRepository;
 
 
     @PostMapping("/import")
@@ -72,13 +76,21 @@ public class PlaneScheduleController {
         }
         try{
             planeService.clearAllData();
-            PlaneScheduleListener listener = new PlaneScheduleListener();
-            ExcelReaderBuilder builder =  EasyExcel.read(file.getInputStream(), PlaneScheduleExcelModel.class, listener);
-            ExcelReaderSheetBuilder sheetBuilder =builder.sheet();
-            sheetBuilder.doRead();
-            List<PlaneScheduleExcelModel> datas = listener.getList();
-            List<PlaneSchedule> planeScheduleList = convert(datas);
-            planeService.batchInsert(planeScheduleList);
+//            PlaneScheduleListener listener = new PlaneScheduleListener();
+//            ExcelReaderBuilder builder =  EasyExcel.read(file.getInputStream(), PlaneScheduleExcelModel.class, listener);
+//            ExcelReaderSheetBuilder sheetBuilder =builder.sheet();
+//            sheetBuilder.doRead();
+//            List<PlaneScheduleExcelModel> datas = listener.getList();
+//            List<PlaneSchedule> planeScheduleList = convert(datas);
+            if (file.getInputStream() == null) {
+                throw new Exception("获取导入文件失败");
+            }
+            try {
+                //这里需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭
+                EasyExcel.read(file.getInputStream(), PlaneScheduleExcelModel.class, new PlaneScheduleListener(planeRepository)).sheet().doRead();
+            } catch (Exception e) {
+                log.error("导入文件异常结束", e);
+            }
             List<PlaneSchedule> allPlaneSchedules =  planeService.getAllPlanesByType(0);
             if(CollectionUtils.isEmpty(allPlaneSchedules)){
                 throw new Exception("导入失败！请重新导入");
@@ -87,17 +99,6 @@ public class PlaneScheduleController {
         }catch(Exception e){
             return  CommonResult.failed(e.getMessage());
         }
-    }
-
-    private List<PlaneSchedule> convert(List<PlaneScheduleExcelModel> datas) {
-        if(CollectionUtils.isEmpty(datas)){
-            return new ArrayList<PlaneSchedule>() ;
-        }
-        return datas.stream().map(e->{
-            PlaneSchedule planeSchedule = new PlaneSchedule();
-            BeanUtils.copyProperties(e,planeSchedule);
-            return planeSchedule;
-        }).collect(Collectors.toList());
     }
 
     @ApiOperation(value = "2、计算航班环增", notes = "计算航班环增")
@@ -182,7 +183,7 @@ public class PlaneScheduleController {
         sheet1.setAutoWidth(Boolean.TRUE);
 
         List<PlaneScheduleExcel> list = planeService.getPlanesExcelVos();
-        logger.info("航班数据导出为：{}", list);
+        log.info("航班数据导出为：{}", list);
         writer.write(list, sheet1);
         writer.finish();
         out.flush();
