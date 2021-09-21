@@ -41,9 +41,9 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("SwaggerUI演示")
-                .description("mall-tiny")
-                .contact("macro")
+                .title("航班自动排期项目")
+                .description("planePlan")
+                .contact("cl")
                 .version("1.0")
                 .build();
     }

@@ -61,34 +61,11 @@ public class PlaneScheduleController {
     @Autowired
     private PlaneService planeService;
 
-    @ApiOperation(value = "导出航班数据", produces = "application/octet-stream", notes = "导出航班数据")
-    @RequestMapping(value = "downExcel", method = RequestMethod.GET)
-    public void downExcel(HttpServletResponse response) throws IOException {
-        response.setContentType("multipart/form-data");
-        response.setCharacterEncoding("utf-8");
-        String fileName = "airplaneData_" + (new SimpleDateFormat("yyyy-MM-dd").format(new Date())) + ".xlsx";
-       // fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
-        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
-        ServletOutputStream out = response.getOutputStream();
 
-        ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX);
-        Sheet sheet1 = new Sheet(1, 0, PlaneScheduleExcel.class);
-        sheet1.setSheetName("sheet1");
-        //设置自适应宽度
-        sheet1.setAutoWidth(Boolean.TRUE);
-
-        List<PlaneScheduleExcel> list = planeService.getPlanesExcelVos();
-        logger.info("航班数据导出为：{}", list);
-        writer.write(list, sheet1);
-        writer.finish();
-
-        out.flush();
-
-    }
 
     @PostMapping("/import")
     @ResponseBody
-    @ApiOperation("导入反馈开通情况")
+    @ApiOperation(value = "1、导入原始数据")
     public CommonResult importInfo(MultipartFile file) throws Exception {
         if (file == null || StringUtils.isEmpty(file.getOriginalFilename())) {
             throw new Exception("参数不能为空");
@@ -102,6 +79,10 @@ public class PlaneScheduleController {
             List<PlaneScheduleExcelModel> datas = listener.getList();
             List<PlaneSchedule> planeScheduleList = convert(datas);
             planeService.batchInsert(planeScheduleList);
+            List<PlaneSchedule> allPlaneSchedules =  planeService.getAllPlanesByType(0);
+            if(CollectionUtils.isEmpty(allPlaneSchedules)){
+                throw new Exception("导入失败！请重新导入");
+            }
             return CommonResult.success("导入成功！");
         }catch(Exception e){
             return  CommonResult.failed(e.getMessage());
@@ -119,7 +100,7 @@ public class PlaneScheduleController {
         }).collect(Collectors.toList());
     }
 
-    @ApiOperation(value = "航班环增", notes = "航班环增")
+    @ApiOperation(value = "2、计算航班环增", notes = "计算航班环增")
     @PostMapping(value = "/planeSchedule", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CommonResult planeSchedule(@RequestBody PlaneScheduleReq planeScheduleReq) throws Exception {
         //校验registration的总数是否为偶数，若不是，则给出提示
@@ -182,6 +163,29 @@ public class PlaneScheduleController {
         map.put(hour,maxCount-1);
         callsignMap.put(planeSchedule.getCallsign(),version);
         return true;
+    }
+
+    @ApiOperation(value = "3、导出航班数据", produces = "application/octet-stream", notes = "点击下载蓝色按钮下载 <a href='http://127.0.0.1:8088/air/toDownloadExcel' /a>下载")
+    @RequestMapping(value = "toDownloadExcel", method = RequestMethod.GET)
+    public void toDownloadExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("multipart/form-data");
+        response.setCharacterEncoding("utf-8");
+        String fileName = "airplaneData_" + (new SimpleDateFormat("yyyy-MM-dd").format(new Date())) + ".xlsx";
+        // fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+        ServletOutputStream out = response.getOutputStream();
+
+        ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX);
+        Sheet sheet1 = new Sheet(1, 0, PlaneScheduleExcel.class);
+        sheet1.setSheetName("sheet1");
+        //设置自适应宽度
+        sheet1.setAutoWidth(Boolean.TRUE);
+
+        List<PlaneScheduleExcel> list = planeService.getPlanesExcelVos();
+        logger.info("航班数据导出为：{}", list);
+        writer.write(list, sheet1);
+        writer.finish();
+        out.flush();
     }
 
 }
