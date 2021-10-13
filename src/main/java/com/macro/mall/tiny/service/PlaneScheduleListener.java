@@ -8,8 +8,6 @@ import com.macro.mall.tiny.mbg.model.PlaneSchedule;
 import com.macro.mall.tiny.mbg.repository.PlaneRepository;
 import com.macro.mall.tiny.vo.PlaneScheduleExcelModel;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -21,14 +19,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleExcelModel> {
-    final static Logger logger = LoggerFactory.getLogger(PlaneScheduleListener.class);
     private Map<Integer, String> headMap = new HashMap<>();
 
-    private PlaneRepository planeRepository;
+    private final PlaneRepository planeRepository;
     /**
      * 每隔5条存储数据库，实际使用中可以6000条，然后清理list ，方便内存回收
      */
-    private static final int BATCH_COUNT = 6000;
+  //  private static final int BATCH_COUNT = 90000;
     List<PlaneScheduleExcelModel> list = new ArrayList<>();
 
     public List<PlaneScheduleExcelModel> getList() {
@@ -41,6 +38,15 @@ public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleEx
 
     public PlaneScheduleListener(PlaneRepository planeRepository){
         this.planeRepository = planeRepository;
+    }
+
+    /**
+     * 解析头数据
+     */
+    @Override
+    public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
+        log.info("解析到一条头数据:{}", JSON.toJSONString(headMap));
+        this.headMap = headMap;
     }
 
     @Override
@@ -57,14 +63,10 @@ public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleEx
 
     @Override
     public void invoke(PlaneScheduleExcelModel model, AnalysisContext analysisContext) {
+        log.info("解析到一条数据:{}", JSON.toJSONString(model));
         Integer rowIndex = analysisContext.readRowHolder().getRowIndex();
         log.info("解析到一条,第{}行,数据:{}", rowIndex, JSON.toJSONString(model));
         list.add(model);
-        planeRepository.batchInsert(convert(list));
-        if (list.size() >= BATCH_COUNT) {
-            // 存储完成清理 list
-           // list.clear();
-        }
     }
 
     private List<PlaneSchedule> convert(List<PlaneScheduleExcelModel> datas) {
@@ -74,6 +76,7 @@ public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleEx
         return datas.stream().map(e->{
             PlaneSchedule planeSchedule = new PlaneSchedule();
             BeanUtils.copyProperties(e,planeSchedule);
+            planeSchedule.setAirtime(e.getTime());
             return planeSchedule;
         }).collect(Collectors.toList());
     }
@@ -87,17 +90,7 @@ public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleEx
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        System.out.println("解析结束");
+        planeRepository.batchInsert(convert(list));
     }
 
-    @Override
-    public boolean hasNext(AnalysisContext analysisContext) {
-        return false;
-    }
-
-    @Override
-    public void invokeHead(Map map, AnalysisContext analysisContext) {
-        log.info("解析到一条头数据:{}", JSON.toJSONString(headMap));
-        this.headMap = headMap;
-    }
 }

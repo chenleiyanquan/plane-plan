@@ -70,7 +70,7 @@ public class PlaneScheduleController {
     @PostMapping("/import")
     @ResponseBody
     @ApiOperation(value = "1、导入原始数据")
-    public CommonResult importInfo(MultipartFile file) throws Exception {
+    public CommonResult importInfo(@RequestParam("file") MultipartFile file) throws Exception {
         if (file == null || StringUtils.isEmpty(file.getOriginalFilename())) {
             throw new Exception("参数不能为空");
         }
