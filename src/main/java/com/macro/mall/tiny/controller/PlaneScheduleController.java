@@ -146,7 +146,8 @@ public class PlaneScheduleController {
             if("orgin".equals(type)){
                 return false;
             }else{
-                throw new Exception("第"+(planeSchedule.getId()+1)+"行，callsign："+planeSchedule.getCallsign()+",registration:"+planeSchedule.getRegistration()+",airTime:"+planeSchedule.getAirtime()+"，该时间段航班数超限！");
+                planeService.clearAllData();
+                throw new Exception("第"+(planeSchedule.getId()+1)+"行，callsign："+planeSchedule.getCallsign()+",registration:"+planeSchedule.getRegistration()+",airTime:"+planeSchedule.getAirtime()+"，该时间段航班数超限！请重新导入后再操作！");
             }
         }
         PlaneSchedule newPlane = new PlaneSchedule();
