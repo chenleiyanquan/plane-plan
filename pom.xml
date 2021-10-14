@@ -93,11 +93,11 @@
             <version>2.0.4</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.200</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.h2database</groupId>-->
+<!--            <artifactId>h2</artifactId>-->
+<!--            <version>1.4.200</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 
@@ -137,7 +137,7 @@
         <profile>
             <id>prd</id>
             <properties>
-                <env>pro</env>
+                <env>prd</env>
                 <jvmSettings.initialMemorySize>512</jvmSettings.initialMemorySize>
                 <jvmSettings.maxMemorySize>512</jvmSettings.maxMemorySize>
             </properties>
@@ -172,7 +172,7 @@
                     <copyConfigurationDirectory>true</copyConfigurationDirectory>
                     <!--原配置，作用：将需要用到的配置文件在打包时复制到jsw生成的conf目录-->
                     <!--                    <configurationSourceDirectory>src/main/resources/env/${env}</configurationSourceDirectory>-->
-                    <configurationSourceDirectory>src/main/resources/env/</configurationSourceDirectory>
+                    <configurationSourceDirectory>src/main/resources/${env}/</configurationSourceDirectory>
                     <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
                     <target>${project.build.directory}</target>
                     <daemons>
@@ -232,8 +232,6 @@
                                     <extraArgument>-XX:+PrintGCApplicationConcurrentTime</extraArgument>
                                     <extraArgument>-XX:+PrintGCApplicationStoppedTime</extraArgument>
                                     <extraArgument>-Xloggc:./logs/gc.log</extraArgument>
-                                    <!--指定启动模式-->
-                                    <extraArgument>-Dnewrelic.environment=${env}</extraArgument>
                                 </extraArguments>
                             </jvmSettings>
                         </daemon>
