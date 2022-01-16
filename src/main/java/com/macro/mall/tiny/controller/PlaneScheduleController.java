@@ -1,14 +1,9 @@
 package com.macro.mall.tiny.controller;
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
-import com.alibaba.excel.read.builder.ExcelReaderBuilder;
-import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
-import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
-import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.mbg.model.PlaneSchedule;
 import com.macro.mall.tiny.mbg.repository.PlaneRepository;
@@ -17,13 +12,8 @@ import com.macro.mall.tiny.service.PlaneService;
 import com.macro.mall.tiny.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,12 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 /*
@@ -120,25 +108,28 @@ public class PlaneScheduleController {
             throw new Exception("请先导入数据！");
         }
         Map<String,Integer> callsignMap = new HashMap<>();
+        Map<String,Integer> registrationMap = new HashMap<>();
         List<Integer> excludeIdList = new ArrayList<>();
-        for(PlaneSchedule e: allPlaneSchedules){
+        for(int i=0;i<allPlaneSchedules.size();i++){
+         PlaneSchedule e = allPlaneSchedules.get(i);
+        //for(PlaneSchedule e: allPlaneSchedules){
             Integer hour = e.getAirtime().getHours();
             if(map.get(hour)<1){
                 continue;
             }
-           boolean result =  saveSameRegistrationData(map,e,callsignMap,planeScheduleReq.getIntervalTime(),"orgin");
+           boolean result =  saveSameRegistrationData(map,e,callsignMap,planeScheduleReq.getIntervalTime(),"orgin",allPlaneSchedules,i,registrationMap);
            if(result){
                excludeIdList.add(e.getId());
                Optional<PlaneSchedule> nextOpt = allPlaneSchedules.stream().filter(f->e.getRegistration().equals(f.getRegistration()) && !excludeIdList.contains(f.getId()) && f.getId()>e.getId()).findFirst();
                if(nextOpt.isPresent()){
-                   saveSameRegistrationData(map,nextOpt.get(),callsignMap,planeScheduleReq.getIntervalTime(),"copy");
+                   saveSameRegistrationData(map,nextOpt.get(),callsignMap,planeScheduleReq.getIntervalTime(),"copy",allPlaneSchedules,i,registrationMap);
                }
            }
         };
         return CommonResult.success("处理成功！");
     }
 
-    private boolean saveSameRegistrationData(SortedMap<Integer, Integer> map, PlaneSchedule planeSchedule, Map<String, Integer> callsignMap, int intervalTime,String type) throws Exception {
+    private boolean saveSameRegistrationData(SortedMap<Integer, Integer> map, PlaneSchedule planeSchedule, Map<String, Integer> callsignMap, int intervalTime, String type, List<PlaneSchedule> allPlaneSchedules, int index, Map<String, Integer> registrationMap) throws Exception {
         int hour = planeSchedule.getAirtime().getHours();
         int minutes = planeSchedule.getAirtime().getMinutes();
         int maxCount = map.get(hour);
@@ -148,6 +139,13 @@ public class PlaneScheduleController {
             }else{
                 planeService.clearAllData();
                 throw new Exception("第"+(planeSchedule.getId()+1)+"行，callsign："+planeSchedule.getCallsign()+",registration:"+planeSchedule.getRegistration()+",airTime:"+planeSchedule.getAirtime()+"，该时间段航班数超限！请重新导入后再操作！");
+            }
+        }
+        //添加限制条件：复制前校验 如果将要复制的航班此前未复制，但在此前存在，则跳过
+        if("orgin".equals(type)) {
+            boolean beforeExisted = allPlaneSchedules.subList(0, index).stream().anyMatch(e -> e.getRegistration().equals(planeSchedule.getRegistration()));
+            if (beforeExisted && !registrationMap.containsKey(planeSchedule.getRegistration())) {
+                return false;
             }
         }
         PlaneSchedule newPlane = new PlaneSchedule();
@@ -164,6 +162,7 @@ public class PlaneScheduleController {
         planeService.savePlane(newPlane);
         map.put(hour,maxCount-1);
         callsignMap.put(planeSchedule.getCallsign(),version);
+        registrationMap.put(planeSchedule.getRegistration(),version);
         return true;
     }
 
