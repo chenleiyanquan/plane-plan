@@ -39,7 +39,7 @@ public class PlaneScheduleExcelModel extends BaseRowModel {
     @NotBlank(message="airline不能为空")
     private String airline;
 
-    @ExcelProperty(value = "airType")
-    @NotBlank(message="airline不能为空")
-    private String airType;
+    @ExcelProperty(value = "airtype")
+    @NotBlank(message="airtype不能为空")
+    private String airtype;
 }
