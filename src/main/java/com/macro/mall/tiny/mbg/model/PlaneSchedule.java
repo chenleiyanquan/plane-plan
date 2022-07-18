@@ -13,19 +13,7 @@ public class PlaneSchedule {
 
     private String callsign;
 
-    private String routing;
-
     private String registration;
-
-    /**
-     * 出发时间
-     */
-    private Date deptime;
-
-    /**
-     * 到达时间
-     */
-    private Date arrtime;
 
     /**
      * 出发站
@@ -53,4 +41,21 @@ public class PlaneSchedule {
      * 航班时间
      */
     private Date airtime;
+
+    /**
+     * 出发时间
+     */
+    private Date deptime;
+
+    private String routing;
+
+    /**
+     * 到达时间
+     */
+    private Date arrtime;
+
+    /**
+     * 航班时间整点
+     */
+    private Integer airhour;
 }

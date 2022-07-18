@@ -74,9 +74,12 @@ public class PlaneScheduleListener extends AnalysisEventListener<PlaneScheduleEx
             return new ArrayList<PlaneSchedule>() ;
         }
         return datas.stream().map(e->{
+            System.out.println(JSON.toJSON(e));
             PlaneSchedule planeSchedule = new PlaneSchedule();
             BeanUtils.copyProperties(e,planeSchedule);
             planeSchedule.setAirtime(e.getTime());
+            planeSchedule.setDataSource((byte) 0);
+            planeSchedule.setAirhour(planeSchedule.getAirtime().getHours());
             return planeSchedule;
         }).collect(Collectors.toList());
     }

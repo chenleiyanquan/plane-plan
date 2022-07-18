@@ -262,76 +262,6 @@ public class PlaneScheduleExample {
             return (Criteria) this;
         }
 
-        public Criteria andRoutingIsNull() {
-            addCriterion("routing is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingIsNotNull() {
-            addCriterion("routing is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingEqualTo(String value) {
-            addCriterion("routing =", value, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingNotEqualTo(String value) {
-            addCriterion("routing <>", value, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingGreaterThan(String value) {
-            addCriterion("routing >", value, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingGreaterThanOrEqualTo(String value) {
-            addCriterion("routing >=", value, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingLessThan(String value) {
-            addCriterion("routing <", value, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingLessThanOrEqualTo(String value) {
-            addCriterion("routing <=", value, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingLike(String value) {
-            addCriterion("routing like", value, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingNotLike(String value) {
-            addCriterion("routing not like", value, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingIn(List<String> values) {
-            addCriterion("routing in", values, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingNotIn(List<String> values) {
-            addCriterion("routing not in", values, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingBetween(String value1, String value2) {
-            addCriterion("routing between", value1, value2, "routing");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoutingNotBetween(String value1, String value2) {
-            addCriterion("routing not between", value1, value2, "routing");
-            return (Criteria) this;
-        }
-
         public Criteria andRegistrationIsNull() {
             addCriterion("registration is null");
             return (Criteria) this;
@@ -399,126 +329,6 @@ public class PlaneScheduleExample {
 
         public Criteria andRegistrationNotBetween(String value1, String value2) {
             addCriterion("registration not between", value1, value2, "registration");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeIsNull() {
-            addCriterion("deptime is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeIsNotNull() {
-            addCriterion("deptime is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeEqualTo(Date value) {
-            addCriterionForJDBCTime("deptime =", value, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeNotEqualTo(Date value) {
-            addCriterionForJDBCTime("deptime <>", value, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeGreaterThan(Date value) {
-            addCriterionForJDBCTime("deptime >", value, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCTime("deptime >=", value, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeLessThan(Date value) {
-            addCriterionForJDBCTime("deptime <", value, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCTime("deptime <=", value, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeIn(List<Date> values) {
-            addCriterionForJDBCTime("deptime in", values, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeNotIn(List<Date> values) {
-            addCriterionForJDBCTime("deptime not in", values, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeBetween(Date value1, Date value2) {
-            addCriterionForJDBCTime("deptime between", value1, value2, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptimeNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCTime("deptime not between", value1, value2, "deptime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeIsNull() {
-            addCriterion("arrtime is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeIsNotNull() {
-            addCriterion("arrtime is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeEqualTo(Date value) {
-            addCriterionForJDBCTime("arrtime =", value, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeNotEqualTo(Date value) {
-            addCriterionForJDBCTime("arrtime <>", value, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeGreaterThan(Date value) {
-            addCriterionForJDBCTime("arrtime >", value, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCTime("arrtime >=", value, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeLessThan(Date value) {
-            addCriterionForJDBCTime("arrtime <", value, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCTime("arrtime <=", value, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeIn(List<Date> values) {
-            addCriterionForJDBCTime("arrtime in", values, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeNotIn(List<Date> values) {
-            addCriterionForJDBCTime("arrtime not in", values, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeBetween(Date value1, Date value2) {
-            addCriterionForJDBCTime("arrtime between", value1, value2, "arrtime");
-            return (Criteria) this;
-        }
-
-        public Criteria andArrtimeNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCTime("arrtime not between", value1, value2, "arrtime");
             return (Criteria) this;
         }
 
@@ -919,6 +729,256 @@ public class PlaneScheduleExample {
 
         public Criteria andAirtimeNotBetween(Date value1, Date value2) {
             addCriterionForJDBCTime("airTime not between", value1, value2, "airtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeIsNull() {
+            addCriterion("deptime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeIsNotNull() {
+            addCriterion("deptime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeEqualTo(Date value) {
+            addCriterionForJDBCTime("deptime =", value, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeNotEqualTo(Date value) {
+            addCriterionForJDBCTime("deptime <>", value, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeGreaterThan(Date value) {
+            addCriterionForJDBCTime("deptime >", value, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCTime("deptime >=", value, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeLessThan(Date value) {
+            addCriterionForJDBCTime("deptime <", value, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCTime("deptime <=", value, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeIn(List<Date> values) {
+            addCriterionForJDBCTime("deptime in", values, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeNotIn(List<Date> values) {
+            addCriterionForJDBCTime("deptime not in", values, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeBetween(Date value1, Date value2) {
+            addCriterionForJDBCTime("deptime between", value1, value2, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeptimeNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCTime("deptime not between", value1, value2, "deptime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingIsNull() {
+            addCriterion("routing is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingIsNotNull() {
+            addCriterion("routing is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingEqualTo(String value) {
+            addCriterion("routing =", value, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingNotEqualTo(String value) {
+            addCriterion("routing <>", value, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingGreaterThan(String value) {
+            addCriterion("routing >", value, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingGreaterThanOrEqualTo(String value) {
+            addCriterion("routing >=", value, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingLessThan(String value) {
+            addCriterion("routing <", value, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingLessThanOrEqualTo(String value) {
+            addCriterion("routing <=", value, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingLike(String value) {
+            addCriterion("routing like", value, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingNotLike(String value) {
+            addCriterion("routing not like", value, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingIn(List<String> values) {
+            addCriterion("routing in", values, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingNotIn(List<String> values) {
+            addCriterion("routing not in", values, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingBetween(String value1, String value2) {
+            addCriterion("routing between", value1, value2, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoutingNotBetween(String value1, String value2) {
+            addCriterion("routing not between", value1, value2, "routing");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeIsNull() {
+            addCriterion("arrtime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeIsNotNull() {
+            addCriterion("arrtime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeEqualTo(Date value) {
+            addCriterionForJDBCTime("arrtime =", value, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeNotEqualTo(Date value) {
+            addCriterionForJDBCTime("arrtime <>", value, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeGreaterThan(Date value) {
+            addCriterionForJDBCTime("arrtime >", value, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCTime("arrtime >=", value, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeLessThan(Date value) {
+            addCriterionForJDBCTime("arrtime <", value, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCTime("arrtime <=", value, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeIn(List<Date> values) {
+            addCriterionForJDBCTime("arrtime in", values, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeNotIn(List<Date> values) {
+            addCriterionForJDBCTime("arrtime not in", values, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeBetween(Date value1, Date value2) {
+            addCriterionForJDBCTime("arrtime between", value1, value2, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andArrtimeNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCTime("arrtime not between", value1, value2, "arrtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourIsNull() {
+            addCriterion("airHour is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourIsNotNull() {
+            addCriterion("airHour is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourEqualTo(Integer value) {
+            addCriterion("airHour =", value, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourNotEqualTo(Integer value) {
+            addCriterion("airHour <>", value, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourGreaterThan(Integer value) {
+            addCriterion("airHour >", value, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourGreaterThanOrEqualTo(Integer value) {
+            addCriterion("airHour >=", value, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourLessThan(Integer value) {
+            addCriterion("airHour <", value, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourLessThanOrEqualTo(Integer value) {
+            addCriterion("airHour <=", value, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourIn(List<Integer> values) {
+            addCriterion("airHour in", values, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourNotIn(List<Integer> values) {
+            addCriterion("airHour not in", values, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourBetween(Integer value1, Integer value2) {
+            addCriterion("airHour between", value1, value2, "airhour");
+            return (Criteria) this;
+        }
+
+        public Criteria andAirhourNotBetween(Integer value1, Integer value2) {
+            addCriterion("airHour not between", value1, value2, "airhour");
             return (Criteria) this;
         }
     }
