@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.mbg.model.PlaneSchedule;
 import com.macro.mall.tiny.mbg.repository.PlaneRepository;
@@ -269,6 +270,21 @@ public class PlaneScheduleController {
                // planeService.clearAllData();
                 //throw new Exception("第"+(planeSchedule.getId()+1)+"行，callsign："+planeSchedule.getCallsign()+",registration:"+planeSchedule.getRegistration()+",airTime:"+planeSchedule.getAirtime()+"，该时间段新增航班数超过设置新增航班数！请重新导入、调整该时间段的新增航班数后再操作！");
                 for (Map.Entry<Integer,Integer> entry : map.entrySet()) {
+                    if(entry.getKey()==23 && map.get(23)<1){
+                        //复制对应航班时，航班数已超需要新增的航班数，则不再复制该航班
+                        if(lastSavePlane!=null){
+                            log.info("lastSavePlane:{}", JSONObject.toJSONString(lastSavePlane));
+                            map.put(lastSavePlane.getAirhour(),map.get(lastSavePlane.getAirhour())+1);
+                            Integer rollBackVersion = callsignMap.get(lastSavePlane.getCallsign());
+                            if(rollBackVersion == null){
+                                return false;
+                            }
+                            rollBackVersion = rollBackVersion-1;
+                            callsignMap.put(lastSavePlane.getCallsign(),rollBackVersion);
+                            registrationMap.put(planeSchedule.getRegistration(),rollBackVersion);
+                        }
+                        return false;
+                    }
                     if(entry.getKey()<=hour){
                         continue;
                     }
@@ -292,19 +308,6 @@ public class PlaneScheduleController {
                 map.put(hour,maxCount-1);
                 callsignMap.put(planeSchedule.getCallsign(),version);
                 registrationMap.put(planeSchedule.getRegistration(),version);
-
-//                //复制对应航班时，航班数已超需要新增的航班数，则不再复制该航班
-//                if(lastSavePlane!=null){
-//                    log.info("lastSavePlane:{}", JSONObject.toJSONString(lastSavePlane));
-//                    map.put(lastSavePlane.getAirhour(),map.get(lastSavePlane.getAirhour())+1);
-//                    Integer rollBackVersion = callsignMap.get(lastSavePlane.getCallsign());
-//                    if(rollBackVersion == null){
-//                        return false;
-//                    }
-//                     rollBackVersion = rollBackVersion-1;
-//                    callsignMap.put(lastSavePlane.getCallsign(),rollBackVersion);
-//                    registrationMap.put(planeSchedule.getRegistration(),rollBackVersion);
-//                }
                 return false;
             }
         }
